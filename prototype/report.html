@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>游戏化生活仪表盘 — 项目可视化报告</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" onerror="window.__chartjsFailed=true"></script>
+  <style>
+    html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+    .section { opacity: 0; transform: translateY(24px); transition: all 0.6s cubic-bezier(.22,1,.36,1); }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .stat-num { font-variant-numeric: tabular-nums; }
+    .nav-link { position: relative; }
+    .nav-link::after { content:''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #6366f1; transition: width .3s; }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+    .timeline-line { position: absolute; top: 50%; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #6366f1, #a78bfa, #c4b5fd); }
+    .layer-card { transition: transform .2s; }
+    .layer-card:hover { transform: translateY(-2px); }
+    @media print { .no-print { display: none !important; } .section { opacity: 1 !important; transform: none !important; } }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+  <!-- ==================== 顶部导航 ==================== -->
+  <nav class="bg-white/90 backdrop-blur border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-50 no-print">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="flex items-center gap-2 hover:opacity-80">
+        <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">G</div>
+        <span class="font-semibold text-lg text-gray-900">GameLife</span>
+      </a>
+      <span class="text-xs text-gray-400 ml-1">项目报告 v1.0</span>
+    </div>
+    <div class="hidden md:flex gap-4 text-sm">
+      <a href="#overview" class="nav-link text-gray-600 hover:text-indigo-500">概览</a>
+      <a href="#requirements" class="nav-link text-gray-600 hover:text-indigo-500">需求</a>
+      <a href="#market" class="nav-link text-gray-600 hover:text-indigo-500">市场</a>
+      <a href="#competitors" class="nav-link text-gray-600 hover:text-indigo-500">竞品</a>
+      <a href="#tech" class="nav-link text-gray-600 hover:text-indigo-500">技术</a>
+      <a href="#business" class="nav-link text-gray-600 hover:text-indigo-500">商业</a>
+      <a href="#roadmap" class="nav-link text-gray-600 hover:text-indigo-500">路线</a>
+    </div>
+    <a href="index.html" class="text-sm text-indigo-500 hover:text-indigo-700">← 返回原型</a>
+  </nav>
+
+  <!-- ==================== Hero 区 ==================== -->
+  <header id="overview" class="section bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 text-white py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">游戏化生活仪表盘</h1>
+      <p class="text-indigo-200 text-lg mb-10">柳比歇夫时间统计 × RPG 游戏化 × AI 智能体 × 精力管理 — 完整闭环</p>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div class="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
+          <div class="stat-num text-3xl font-bold" data-count="39">0</div>
+          <div class="text-indigo-200 text-xs mt-1">用户故事</div>
+        </div>
+        <div class="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
+          <div class="stat-num text-3xl font-bold" data-count="9">0</div>
+          <div class="text-indigo-200 text-xs mt-1">需求模块</div>
+        </div>
+        <div class="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
+          <div class="stat-num text-3xl font-bold" data-count="6">0</div>
+          <div class="text-indigo-200 text-xs mt-1">产出文档</div>
+        </div>
+        <div class="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
+          <div class="stat-num text-3xl font-bold" data-count="5">0</div>
+          <div class="text-indigo-200 text-xs mt-1">原型页面</div>
+        </div>
+        <div class="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
+          <div class="stat-num text-3xl font-bold" data-count="7">0</div>
+          <div class="text-indigo-200 text-xs mt-1">竞品分析</div>
+        </div>
+        <div class="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
+          <div class="stat-num text-3xl font-bold">16-22</div>
+          <div class="text-indigo-200 text-xs mt-1">周 MVP 路线</div>
+        </div>
+      </div>
+      <p class="text-indigo-300 text-xs mt-6">数据截止：2026-07-12 · 基于 v1.0 文档集生成</p>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10 space-y-16">
+
+    <!-- ==================== S2: 需求全景 ==================== -->
+    <section id="requirements" class="section">
+      <h2 class="text-2xl font-bold text-gray-900 mb-1">需求全景</h2>
+      <p class="text-gray-500 mb-6">39 个用户故事 · 9 大需求模块 · 3 个迭代阶段</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold text-sm text-gray-500 mb-4">按需求模块分布（堆叠）</h3>
+          <canvas id="chartModulePhase" height="260"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold text-sm text-gray-500 mb-4">MoSCoW 优先级分布</h3>
+          <canvas id="chartMoSCoW" height="260"></canvas>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
+        <h3 class="font-semibold text-sm text-gray-500 mb-3">模块 × Phase 明细</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead><tr class="border-b border-gray-200 text-left text-gray-500">
+              <th class="py-2 pr-4">模块</th><th class="py-2 pr-4">需求ID</th><th class="py-2 pr-4">故事数</th><th class="py-2 pr-4">Phase</th><th class="py-2">优先级</th>
+            </tr></thead>
+            <tbody id="tblModuleDetail"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== S3: 受众与市场 ==================== -->
+    <section id="market" class="section">
+      <h2 class="text-2xl font-bold text-gray-900 mb-1">受众与市场规模</h2>
+      <p class="text-gray-500 mb-6">四层受众画像 · 四大市场领域数据支撑</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold text-sm text-gray-500 mb-4">受众层级规模</h3>
+          <canvas id="chartAudience" height="220"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold text-sm text-gray-500 mb-4">市场规模（2025 基准）</h3>
+          <div class="space-y-4" id="marketBars"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== S4: 竞品分析 ==================== -->
+    <section id="competitors" class="section">
+      <h2 class="text-2xl font-bold text-gray-900 mb-1">竞品全景</h2>
+      <p class="text-gray-500 mb-6">无竞品同时覆盖 RPG游戏化 + AI智能体 + 精力管理 + 治未病</p>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+        <h3 class="font-semibold text-sm text-gray-500 mb-3">竞品对比</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead><tr class="border-b border-gray-200 text-left text-gray-500">
+              <th class="py-2 pr-4">竞品</th><th class="py-2 pr-4">类型</th><th class="py-2 pr-4">规模</th><th class="py-2 pr-4">RPG</th><th class="py-2 pr-4">AI</th><th class="py-2 pr-4">精力</th><th class="py-2">治未病</th>
+            </tr></thead>
+            <tbody id="tblCompetitors"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="gapCards"></div>
+    </section>
+
+    <!-- ==================== S5: 技术架构 ==================== -->
+    <section id="tech" class="section">
+      <h2 class="text-2xl font-bold text-gray-900 mb-1">技术架构</h2>
+      <p class="text-gray-500 mb-6">React + FastAPI + MongoDB · Agently + PydanticAI + CrewAI + LlamaIndex</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold text-sm text-gray-500 mb-4">技术栈分层</h3>
+          <div class="space-y-2" id="techLayers"></div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold text-sm text-gray-500 mb-4">AI 框架 5 维评估</h3>
+          <canvas id="chartRadar" height="280"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== S6: 商业模型 ==================== -->
+    <section id="business" class="section">
+      <h2 class="text-2xl font-bold text-gray-900 mb-1">商业模型</h2>
+      <p class="text-gray-500 mb-6">三层收入结构 · 社会问责驱动的付费意愿</p>
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center">
+          <div class="text-3xl mb-2">🆓</div>
+          <div class="font-bold text-lg">免费层</div>
+          <div class="text-gray-500 text-sm mt-1">基础任务追踪<br>RPG 属性面板<br>每日精力评估</div>
+          <div class="text-2xl font-bold text-gray-800 mt-3">¥0</div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border-2 border-indigo-300 p-5 text-center relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white text-xs px-3 py-0.5 rounded-full">推荐</div>
+          <div class="text-3xl mb-2">⚔️</div>
+          <div class="font-bold text-lg">修炼者</div>
+          <div class="text-gray-500 text-sm mt-1">AI 目标分解<br>治未病预警<br>成长热力图</div>
+          <div class="text-2xl font-bold text-indigo-600 mt-3">¥12<span class="text-sm text-gray-400">/月</span></div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center">
+          <div class="text-3xl mb-2">👑</div>
+          <div class="font-bold text-lg">大师</div>
+          <div class="text-gray-500 text-sm mt-1">社交组队 Boss 战<br>高级数据分析<br>自定义主题</div>
+          <div class="text-2xl font-bold text-gray-800 mt-3">¥28<span class="text-sm text-gray-400">/月</span></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <h3 class="font-semibold text-sm text-gray-500 mb-4">付费驱动因素评级</h3>
+        <div class="space-y-3" id="paymentDrivers"></div>
+      </div>
+    </section>
+
+    <!-- ==================== S7: 迭代路线 ==================== -->
+    <section id="roadmap" class="section">
+      <h2 class="text-2xl font-bold text-gray-900 mb-1">迭代路线</h2>
+      <p class="text-gray-500 mb-6">3 阶段 · 16-22 周 · 从核心验证到生态完善</p>
+      <div class="relative py-8">
+        <div class="timeline-line hidden md:block"></div>
+        <div class="grid md:grid-cols-3 gap-6" id="roadmapPhases"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== 页脚 ==================== -->
+  <footer class="border-t border-gray-200 py-6 px-6 text-center text-xs text-gray-400 no-print">
+    <p>游戏化生活仪表盘 · 项目可视化报告 v1.0 · 数据截止 2026-07-12</p>
+    <p class="mt-1">产出物：requirements.md · prd.md · index.html · business-analysis.md · business-analysis-extra.md · magic-skill-tree.md</p>
+  </footer>
+
+  <!-- ==================== 数据与脚本 ==================== -->
+  <script>
+  const D = {
+    modules: [
+      { id:'R1', name:'RPG习惯追踪', total:8, p1:8, p2:0, p3:0, must:6, should:2, could:0 },
+      { id:'R2', name:'AI目标分解', total:6, p1:0, p2:6, p3:0, must:4, should:1, could:1 },
+      { id:'R3', name:'属性精力仪表盘', total:6, p1:6, p2:0, p3:0, must:4, should:2, could:0 },
+      { id:'R4', name:'治未病时间管理', total:4, p1:0, p2:4, p3:0, must:2, should:1, could:1 },
+      { id:'R5', name:'成长可视化', total:5, p1:0, p2:5, p3:0, must:2, should:2, could:1 },
+      { id:'R6', name:'认知负荷匹配', total:3, p1:0, p2:3, p3:0, must:1, should:1, could:1 },
+      { id:'R7', name:'双轨奖励', total:2, p1:0, p2:2, p3:0, must:0, should:2, could:0 },
+      { id:'R8', name:'沉浸剧情', total:2, p1:0, p2:2, p3:0, must:0, should:1, could:1 },
+      { id:'R9', name:'社交协作', total:3, p1:0, p2:0, p3:3, must:0, should:0, could:3 }
+    ],
+    moscow: { must:21, should:13, could:5 },
+    audience: [
+      { name:'核心层', desc:'18-30岁 考研/考公/自我提升', size:3000, unit:'万+' },
+      { name:'扩展层', desc:'25-35岁 互联网从业者', size:3000, unit:'万+' },
+      { name:'外围层', desc:'RPG/游戏化爱好者', size:400, unit:'万+' },
+      { name:'潜力层', desc:'企业团队管理/培训', size:39, unit:'% CAGR' }
+    ],
+    marketSize: [
+      { name:'生活规划应用', value:'3.42亿', unit:'美元', growth:'CAGR 15%+' },
+      { name:'全球游戏化市场', value:'37亿', unit:'元(2023)', growth:'CAGR 27%' },
+      { name:'健身应用', value:'216.8亿', unit:'元', growth:'CAGR 15.9%' },
+      { name:'医疗保健游戏化', value:'56.7亿', unit:'美元', growth:'CAGR 13.26%' }
+    ],
+    competitors: [
+      { name:'Habitica', type:'RPG习惯追踪', scale:'14k★/400万用户', rpg:'✅', ai:'❌', energy:'❌', prevent:'❌' },
+      { name:'PlotPlayer', type:'AI目标分解', scale:'小规模', rpg:'⚠️', ai:'✅', energy:'❌', prevent:'❌' },
+      { name:'地球Online看板', type:'属性面板', scale:'小规模', rpg:'⚠️', ai:'❌', energy:'⚠️', prevent:'❌' },
+      { name:'Keep', type:'健身+奖牌', scale:'月活3000万+', rpg:'⚠️', ai:'❌', energy:'❌', prevent:'❌' },
+      { name:'SuperProductivity', type:'时间管理', scale:'20k★', rpg:'❌', ai:'❌', energy:'❌', prevent:'❌' },
+      { name:'Thryver', type:'生产力社区', scale:'新产品', rpg:'⚠️', ai:'⚠️', energy:'❌', prevent:'❌' },
+      { name:'Narn', type:'游戏化习惯', scale:'小规模', rpg:'✅', ai:'❌', energy:'❌', prevent:'❌' }
+    ],
+    gaps: [
+      { title:'精力管理', desc:'在最佳状态做最合适的事', potential:'高' },
+      { title:'治未病', desc:'任务变紧急之前提前干预', potential:'高' },
+      { title:'拖延症自救', desc:'激进干预策略', potential:'极高' },
+      { title:'认知负荷匹配', desc:'基于精力状态推荐任务', potential:'中高' }
+    ],
+    techLayers: [
+      { name:'表现层', items:'React + Tailwind + shadcn/ui', color:'bg-indigo-500' },
+      { name:'API 层', items:'Python FastAPI + RESTful', color:'bg-purple-500' },
+      { name:'Agent 编排', items:'Agently + CrewAI', color:'bg-violet-500' },
+      { name:'核心推理', items:'PydanticAI + LlamaIndex RAG', color:'bg-fuchsia-500' },
+      { name:'数据层', items:'MongoDB + Redis', color:'bg-pink-500' },
+      { name:'模型层', items:'通义千问 / 智谱GLM / 百川 / 月之暗面', color:'bg-rose-500' },
+      { name:'部署', items:'Docker 自托管优先', color:'bg-red-400' }
+    ],
+    aiFrameworks: [
+      { name:'PydanticAI', scores:[4,3,4,5,4] },
+      { name:'CrewAI', scores:[5,3,5,4,4] },
+      { name:'Agently', scores:[4,5,4,4,4] },
+      { name:'LlamaIndex', scores:[4,4,3,5,4] }
+    ],
+    radarLabels: ['模型抽象','评估模块','多Agent协作','架构集成','工程化成熟度'],
+    paymentDrivers: [
+      { name:'社交问责', stars:5, note:'"我不做队友会掉血"' },
+      { name:'AI 智能服务', stars:4, note:'目标分解/精力评估/拖延干预' },
+      { name:'归属感驱动', stars:4, note:'付款是"尽一份力"而非"买特权"' },
+      { name:'个性化表达', stars:3, note:'主题/皮肤/装备' },
+      { name:'数据深度', stars:3, note:'柳比歇夫统计/年度成长总结' }
+    ],
+    phases: [
+      { name:'Phase 1', subtitle:'核心验证', duration:'5-6 周', color:'indigo',
+        features:['RPG习惯追踪(CRUD/XP/等级)','每日精力评估','生活属性面板','基础前端仪表盘','金币基础获取'] },
+      { name:'Phase 2', subtitle:'AI 赋能', duration:'6-8 周', color:'purple',
+        features:['AI目标分解引擎','治未病时间管理','成长可视化(热力图/曲线)','认知负荷匹配','双轨奖励机制','沉浸剧情专注','难度自适应'] },
+      { name:'Phase 3', subtitle:'生态完善', duration:'5-8 周', color:'violet',
+        features:['社交协作/组队Boss战','深度精力管理','多主题切换','自托管部署','完整装备/宠物系统'] }
+    ]
+  };
+
+  // ===== 数字滚动 =====
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = +el.dataset.count, dur = 1200;
+    let start = null;
+    const step = ts => { if(!start) start=ts; const p=Math.min((ts-start)/dur,1); el.textContent=Math.floor(p*target); if(p<1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+
+  // ===== Section 入场动画 =====
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.section').forEach(s => obs.observe(s));
+
+  // ===== 图表渲染 =====
+  if (window.__chartjsFailed) {
+    document.querySelectorAll('canvas').forEach(c => { c.parentElement.innerHTML += '<p class="text-red-400 text-sm">⚠️ Chart.js 加载失败，图表无法渲染</p>'; });
+  } else {
+    const palette = { indigo:'#6366f1', purple:'#a855f7', violet:'#8b5cf6', emerald:'#10b981', amber:'#f59e0b', rose:'#f43f5e', gray:'#94a3b8' };
+
+    // 堆叠柱状图 - 模块×Phase
+    new Chart(document.getElementById('chartModulePhase'), {
+      type: 'bar',
+      data: {
+        labels: D.modules.map(m => m.id),
+        datasets: [
+          { label:'Phase 1', data: D.modules.map(m=>m.p1), backgroundColor: '#6366f1', borderRadius: 4 },
+          { label:'Phase 2', data: D.modules.map(m=>m.p2), backgroundColor: '#f59e0b', borderRadius: 4 },
+          { label:'Phase 3', data: D.modules.map(m=>m.p3), backgroundColor: '#10b981', borderRadius: 4 }
+        ]
+      },
+      options: { responsive:true, plugins:{ legend:{ position:'bottom', labels:{boxWidth:12, padding:16}} }, scales:{ x:{stacked:true, grid:{display:false}}, y:{stacked:true, beginAtZero:true} } }
+    });
+
+    // 环形图 - MoSCoW
+    new Chart(document.getElementById('chartMoSCoW'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Must (21)','Should (13)','Could (5)'],
+        datasets: [{ data:[21,13,5], backgroundColor:[palette.indigo, palette.amber, palette.gray], borderWidth:0, hoverOffset:8 }]
+      },
+      options: { responsive:true, cutout:'60%', plugins:{ legend:{ position:'bottom', labels:{boxWidth:12, padding:16}} } }
+    });
+
+    // 横向柱状图 - 受众规模
+    new Chart(document.getElementById('chartAudience'), {
+      type: 'bar',
+      data: {
+        labels: D.audience.map(a=>a.name),
+        datasets: [{ data: D.audience.map(a=>a.size), backgroundColor:[palette.indigo, palette.purple, palette.violet, palette.rose], borderRadius:6 }]
+      },
+      options: { indexAxis:'y', responsive:true, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, grid:{color:'#f1f5f9'}}, y:{grid:{display:false}}} }
+    });
+
+    // 雷达图 - AI 框架评估
+    new Chart(document.getElementById('chartRadar'), {
+      type: 'radar',
+      data: {
+        labels: D.radarLabels,
+        datasets: D.aiFrameworks.map((f,i) => ({
+          label: f.name,
+          data: f.scores,
+          borderColor: [palette.indigo, palette.emerald, palette.amber, palette.rose][i],
+          backgroundColor: [palette.indigo+'20', palette.emerald+'20', palette.amber+'20', palette.rose+'20'][i],
+          pointRadius: 3, borderWidth: 2
+        }))
+      },
+      options: { responsive:true, scales:{ r:{ beginAtZero:true, max:5, ticks:{stepSize:1, font:{size:10}}, pointLabels:{font:{size:11}} } }, plugins:{legend:{position:'bottom', labels:{boxWidth:12, padding:12}}} }
+    });
+  }
+
+  // ===== 表格与卡片渲染 =====
+  // 模块明细表
+  const tblBody = document.getElementById('tblModuleDetail');
+  D.modules.forEach(m => {
+    const phase = m.p1>0?'Phase 1':m.p2>0?'Phase 2':'Phase 3';
+    const pri = []; if(m.must) pri.push(`<span class="text-indigo-600">${m.must} Must</span>`); if(m.should) pri.push(`<span class="text-amber-600">${m.should} Should</span>`); if(m.could) pri.push(`<span class="text-gray-500">${m.could} Could</span>`);
+    tblBody.innerHTML += `<tr class="border-b border-gray-100"><td class="py-2 pr-4 font-medium">${m.name}</td><td class="py-2 pr-4 text-gray-500">${m.id}</td><td class="py-2 pr-4">${m.total}</td><td class="py-2 pr-4 text-gray-500">${phase}</td><td class="py-2 text-sm">${pri.join(' · ')}</td></tr>`;
+  });
+
+  // 市场规模条
+  const maxVal = 216.8;
+  document.getElementById('marketBars').innerHTML = D.marketSize.map(m => {
+    const num = parseFloat(m.value);
+    const pct = Math.max((num/maxVal)*100, 8);
+    return `<div><div class="flex justify-between text-sm mb-1"><span class="font-medium">${m.name}</span><span class="text-gray-500">${m.value}${m.unit} · ${m.growth}</span></div><div class="h-3 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+
+  // 竞品表
+  const tblC = document.getElementById('tblCompetitors');
+  D.competitors.forEach(c => {
+    const dot = v => v==='✅'?'<span class="text-emerald-500 font-bold">✅</span>':v==='⚠️'?'<span class="text-amber-500">⚠️</span>':'<span class="text-gray-300">❌</span>';
+    tblC.innerHTML += `<tr class="border-b border-gray-100"><td class="py-2 pr-4 font-medium">${c.name}</td><td class="py-2 pr-4 text-gray-500 text-xs">${c.type}</td><td class="py-2 pr-4 text-xs">${c.scale}</td><td class="py-2 pr-4 text-center">${dot(c.rpg)}</td><td class="py-2 pr-4 text-center">${dot(c.ai)}</td><td class="py-2 pr-4 text-center">${dot(c.energy)}</td><td class="py-2 text-center">${dot(c.prevent)}</td></tr>`;
+  });
+
+  // 市场空白卡片
+  document.getElementById('gapCards').innerHTML = D.gaps.map(g =>
+    `<div class="bg-white rounded-xl shadow-sm border-2 border-red-200 p-4"><div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 bg-red-500 rounded-full"></span><span class="font-semibold text-sm">${g.title}</span></div><p class="text-gray-500 text-xs mb-2">${g.desc}</p><span class="text-xs bg-red-50 text-red-600 px-2 py-0.5 rounded-full">传播潜力: ${g.potential}</span></div>`
+  ).join('');
+
+  // 技术栈层级
+  document.getElementById('techLayers').innerHTML = D.techLayers.map(l =>
+    `<div class="layer-card flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100"><div class="w-2 h-10 ${l.color} rounded-full flex-shrink-0"></div><div><div class="text-xs text-gray-500">${l.name}</div><div class="text-sm font-medium">${l.items}</div></div></div>`
+  ).join('');
+
+  // 付费驱动
+  document.getElementById('paymentDrivers').innerHTML = D.paymentDrivers.map(d =>
+    `<div><div class="flex items-center justify-between text-sm mb-1"><span class="font-medium">${d.name}</span><span class="text-gray-400 text-xs">${d.note}</span></div><div class="flex gap-1">${Array.from({length:5},(_, i)=>`<div class="h-2 flex-1 rounded-full ${i<d.stars?'bg-indigo-500':'bg-gray-200'}"></div>`).join('')}</div></div>`
+  ).join('');
+
+  // 路线图
+  const colorMap = { indigo:'border-indigo-500 bg-indigo-50', purple:'border-purple-500 bg-purple-50', violet:'border-violet-500 bg-violet-50' };
+  const textColor = { indigo:'text-indigo-600', purple:'text-purple-600', violet:'text-violet-600' };
+  document.getElementById('roadmapPhases').innerHTML = D.phases.map(p =>
+    `<div class="relative bg-white rounded-xl shadow-sm border border-gray-200 p-5"><div class="flex items-center gap-2 mb-1"><span class="w-3 h-3 rounded-full ${textColor[p.color].replace('text','bg')}"></span><span class="font-bold ${textColor[p.color]}">${p.name}</span><span class="text-gray-400 text-xs">${p.duration}</span></div><div class="text-sm font-semibold text-gray-700 mb-3">${p.subtitle}</div><ul class="space-y-1.5">${p.features.map(f=>`<li class="text-xs text-gray-600 flex items-start gap-1.5"><span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-gray-300 flex-shrink-0"></span>${f}</li>`).join('')}</ul></div>`
+  ).join('');
+  </script>
+</body>
+</html>

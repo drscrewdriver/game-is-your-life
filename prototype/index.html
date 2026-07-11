@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>游戏化生活仪表盘 — 原型预览</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .page { display: none; }
+    .page.active { display: block; }
+    .tab-btn.active { border-color: #6366f1; color: #6366f1; background: #eef2ff; }
+    .bar-fill { transition: width 0.3s ease; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+  <!-- ==================== 顶部导航 ==================== -->
+  <nav class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">G</div>
+      <span class="font-semibold text-lg text-gray-900">GameLife</span>
+      <span class="text-xs text-gray-400 ml-1">原型预览 v0.1</span>
+    </div>
+    <div class="flex gap-1" id="tabBar">
+      <button class="tab-btn active px-4 py-2 text-sm font-medium border-b-2 border-transparent rounded-t hover:text-indigo-500" data-page="dashboard">仪表盘</button>
+      <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent rounded-t hover:text-indigo-500" data-page="tasks">任务中心</button>
+      <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent rounded-t hover:text-indigo-500" data-page="goals">目标分解</button>
+      <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent rounded-t hover:text-indigo-500" data-page="attributes">属性详情</button>
+      <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent rounded-t hover:text-indigo-500" data-page="growth">成长中心</button>
+    </div>
+    <a href="report.html" class="px-3 py-1.5 text-sm font-medium text-indigo-500 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition">📊 项目报告</a>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-gray-500">Lv.5 战士</span>
+      <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs">头像</div>
+    </div>
+  </nav>
+
+  <!-- ==================== 页面 1: 仪表盘首页 ==================== -->
+  <div id="page-dashboard" class="page active p-6 max-w-7xl mx-auto">
+
+    <!-- 角色卡片 -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+      <div class="flex items-center gap-6">
+        <div class="w-16 h-16 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <span class="text-2xl">⚔️</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="font-bold text-lg">我的角色</span>
+            <span class="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full">Lv.5 战士</span>
+          </div>
+          <!-- XP 经验条 -->
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs text-gray-500 w-8">XP</span>
+            <div class="flex-1 bg-gray-200 rounded-full h-3">
+              <div class="bar-fill bg-indigo-500 h-3 rounded-full" style="width: 65%"></div>
+            </div>
+            <span class="text-xs text-gray-500">650/1000</span>
+          </div>
+          <!-- HP 生命条 -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 w-8">HP</span>
+            <div class="flex-1 bg-gray-200 rounded-full h-3">
+              <div class="bar-fill bg-red-400 h-3 rounded-full" style="width: 80%"></div>
+            </div>
+            <span class="text-xs text-gray-500">80/100</span>
+          </div>
+        </div>
+        <div class="text-center px-4">
+          <div class="text-2xl font-bold text-yellow-500">💰 320</div>
+          <div class="text-xs text-gray-400">金币</div>
+        </div>
+        <div class="flex gap-2">
+          <div class="w-10 h-10 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400" title="装备栏(Phase 2)">装备</div>
+          <div class="w-10 h-10 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400" title="宠物(Phase 3)">宠物</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-6">
+      <!-- 左列: 精力评估 + 任务摘要 -->
+      <div class="col-span-1 space-y-6">
+        <!-- 今日精力评估卡片 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-lg">🌅</span> 今日精力评估
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">创造力指数</span>
+              <div class="flex items-center gap-2">
+                <div class="w-24 bg-gray-200 rounded-full h-2">
+                  <div class="bg-purple-400 h-2 rounded-full" style="width: 75%"></div>
+                </div>
+                <span class="text-sm font-medium text-purple-600">75</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">认知负荷</span>
+              <div class="flex items-center gap-2">
+                <div class="w-24 bg-gray-200 rounded-full h-2">
+                  <div class="bg-yellow-400 h-2 rounded-full" style="width: 40%"></div>
+                </div>
+                <span class="text-sm font-medium text-yellow-600">40</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">疲劳程度</span>
+              <div class="flex items-center gap-2">
+                <div class="w-24 bg-gray-200 rounded-full h-2">
+                  <div class="bg-green-400 h-2 rounded-full" style="width: 25%"></div>
+                </div>
+                <span class="text-sm font-medium text-green-600">25</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 rounded-lg">
+            <p class="text-sm text-indigo-700">💡 <strong>今日建议：</strong>创造力峰值，适合执行写作/创意类任务</p>
+          </div>
+        </div>
+
+        <!-- 今日任务摘要 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-lg">📋</span> 今日任务
+          </h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+              <input type="checkbox" class="rounded">
+              <span class="text-sm flex-1">晨间冥想 10 分钟</span>
+              <span class="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">机械性</span>
+            </div>
+            <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+              <input type="checkbox" class="rounded" checked>
+              <span class="text-sm flex-1 line-through text-gray-400">阅读 30 分钟</span>
+              <span class="text-xs bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded">创造性</span>
+            </div>
+            <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+              <input type="checkbox" class="rounded">
+              <span class="text-sm flex-1">编写项目文档</span>
+              <span class="text-xs bg-green-100 text-green-600 px-1.5 py-0.5 rounded">分析性</span>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-gray-400">已完成 1/3 · 获得 15 XP</div>
+        </div>
+      </div>
+
+      <!-- 右列: 属性面板 + 快速操作 -->
+      <div class="col-span-2 space-y-6">
+        <!-- 属性面板缩略 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-4 flex items-center gap-2">
+            <span class="text-lg">📊</span> 生活属性面板
+          </h3>
+          <div class="grid grid-cols-3 gap-4">
+            <!-- 生理需求 -->
+            <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+              <h4 class="text-sm font-semibold text-green-700 mb-3">🏃 生理需求</h4>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">睡眠质量</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width: 80%"></div></div>
+                    <span class="text-xs text-green-600">80</span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">饮水量</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-yellow-400 h-1.5 rounded-full" style="width: 50%"></div></div>
+                    <span class="text-xs text-yellow-600">50</span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">运动量</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-red-400 h-1.5 rounded-full" style="width: 20%"></div></div>
+                    <span class="text-xs text-red-500">20</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 情感状态 -->
+            <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+              <h4 class="text-sm font-semibold text-yellow-700 mb-3">😊 情感状态</h4>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">快乐值</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width: 70%"></div></div>
+                    <span class="text-xs text-green-600">70</span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">压力指数</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-yellow-400 h-1.5 rounded-full" style="width: 55%"></div></div>
+                    <span class="text-xs text-yellow-600">55</span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">社交能量</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width: 65%"></div></div>
+                    <span class="text-xs text-green-600">65</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 能力属性 -->
+            <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              <h4 class="text-sm font-semibold text-blue-700 mb-3">🧠 能力属性</h4>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">编程能力</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width: 85%"></div></div>
+                    <span class="text-xs text-green-600">85</span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">阅读积累</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-yellow-400 h-1.5 rounded-full" style="width: 60%"></div></div>
+                    <span class="text-xs text-yellow-600">60</span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-gray-600">创意指数</span>
+                  <div class="flex items-center gap-1">
+                    <div class="w-16 bg-gray-200 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width: 75%"></div></div>
+                    <span class="text-xs text-green-600">75</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 快速操作区 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-lg">⚡</span> 快速操作
+          </h3>
+          <div class="grid grid-cols-4 gap-3">
+            <button class="p-4 bg-indigo-50 rounded-lg border border-indigo-200 hover:bg-indigo-100 text-center">
+              <div class="text-2xl mb-1">➕</div>
+              <div class="text-xs text-indigo-700">添加任务</div>
+            </button>
+            <button class="p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 text-center">
+              <div class="text-2xl mb-1">⏱️</div>
+              <div class="text-xs text-orange-700">开始专注</div>
+            </button>
+            <button class="p-4 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 text-center">
+              <div class="text-2xl mb-1">📈</div>
+              <div class="text-xs text-green-700">查看成长</div>
+            </button>
+            <button class="p-4 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 text-center">
+              <div class="text-2xl mb-1">🎯</div>
+              <div class="text-xs text-purple-700">设定目标</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 页面 2: 任务中心 ==================== -->
+  <div id="page-tasks" class="page p-6 max-w-7xl mx-auto">
+    <div class="grid grid-cols-3 gap-6">
+      <!-- 左列: 四象限面板 -->
+      <div class="col-span-2">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+          <h3 class="font-semibold mb-4 flex items-center gap-2">
+            <span class="text-lg">🏰</span> 艾森豪威尔矩阵（治未病 · Phase 2）
+          </h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-blue-50 rounded-lg p-4 border border-blue-200 min-h-32">
+              <div class="text-sm font-semibold text-blue-700 mb-2">🧘 修炼任务（重要不紧急）</div>
+              <div class="text-xs text-gray-500 mb-2">完成积累长期属性加成</div>
+              <div class="space-y-1">
+                <div class="text-xs bg-white rounded px-2 py-1">学习 Python 数据分析</div>
+                <div class="text-xs bg-white rounded px-2 py-1">每周运动 3 次</div>
+              </div>
+            </div>
+            <div class="bg-red-50 rounded-lg p-4 border border-red-200 min-h-32">
+              <div class="text-sm font-semibold text-red-700 mb-2">🐉 Boss 战（重要且紧急）</div>
+              <div class="text-xs text-gray-500 mb-2">高难度、高奖励</div>
+              <div class="space-y-1">
+                <div class="text-xs bg-white rounded px-2 py-1 text-red-600">⚠️ 项目截止日明天</div>
+              </div>
+            </div>
+            <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200 min-h-32">
+              <div class="text-sm font-semibold text-yellow-700 mb-2">🧹 杂役任务（紧急不重要）</div>
+              <div class="text-xs text-gray-500 mb-2">低 XP、快速完成</div>
+              <div class="space-y-1">
+                <div class="text-xs bg-white rounded px-2 py-1">回复邮件</div>
+                <div class="text-xs bg-white rounded px-2 py-1">整理桌面</div>
+              </div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 min-h-32">
+              <div class="text-sm font-semibold text-gray-500 mb-2">🚶 闲逛时间（不重要不紧急）</div>
+              <div class="text-xs text-gray-400 mb-2">消耗金币兑换奖励</div>
+              <div class="space-y-1">
+                <div class="text-xs bg-white rounded px-2 py-1">刷社交媒体</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold flex items-center gap-2">
+              <span class="text-lg">📋</span> 任务列表
+            </h3>
+            <div class="flex gap-1">
+              <button class="px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">全部</button>
+              <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">Daily</button>
+              <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">Habit</button>
+              <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">Quest</button>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
+              <input type="checkbox" class="rounded w-4 h-4">
+              <div class="flex-1">
+                <div class="text-sm font-medium">晨间冥想 10 分钟</div>
+                <div class="text-xs text-gray-400">Daily · 连续 5 天</div>
+              </div>
+              <span class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded">机械性</span>
+              <span class="text-xs text-yellow-500">+10 XP</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+              <input type="checkbox" class="rounded w-4 h-4" checked>
+              <div class="flex-1">
+                <div class="text-sm font-medium line-through text-gray-400">阅读 30 分钟</div>
+                <div class="text-xs text-gray-400">Daily · 已完成 ✓ +15 XP</div>
+              </div>
+              <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded">创造性</span>
+              <span class="text-xs text-green-500">✓</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
+              <input type="checkbox" class="rounded w-4 h-4">
+              <div class="flex-1">
+                <div class="text-sm font-medium">编写项目文档</div>
+                <div class="text-xs text-gray-400">Quest · 截止 7月15日</div>
+              </div>
+              <span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded">分析性</span>
+              <span class="text-xs text-yellow-500">+50 XP</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
+              <input type="checkbox" class="rounded w-4 h-4">
+              <div class="flex-1">
+                <div class="text-sm font-medium">每日饮水 8 杯</div>
+                <div class="text-xs text-gray-400">Habit · 今日 3/8 杯</div>
+              </div>
+              <span class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded">机械性</span>
+              <span class="text-xs text-yellow-500">+5 XP</span>
+            </div>
+          </div>
+          <!-- 添加任务按钮 -->
+          <button class="mt-4 w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-400 hover:border-indigo-300 hover:text-indigo-400">
+            + 添加新任务
+          </button>
+        </div>
+      </div>
+
+      <!-- 右列: 今日推荐 -->
+      <div class="col-span-1">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-lg">💡</span> 今日推荐（R6 · Phase 2）
+          </h3>
+          <div class="p-3 bg-indigo-50 rounded-lg mb-3">
+            <p class="text-sm text-indigo-700 font-medium">创造力峰值时段</p>
+            <p class="text-xs text-indigo-500 mt-1">建议优先执行创造性任务</p>
+          </div>
+          <div class="space-y-2">
+            <div class="p-2 bg-purple-50 rounded-lg border border-purple-200">
+              <div class="text-xs font-medium text-purple-700">推荐任务</div>
+              <div class="text-sm text-purple-900 mt-1">编写创意方案</div>
+              <div class="text-xs text-purple-500">匹配度 92%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 拖延预警（Phase 2） -->
+        <div class="bg-white rounded-xl shadow-sm border border-orange-200 p-5">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-lg">⚠️</span> 治未病预警（Phase 2）
+          </h3>
+          <div class="p-3 bg-orange-50 rounded-lg border border-orange-200">
+            <p class="text-sm text-orange-700 font-medium">🚨 修炼危机</p>
+            <p class="text-xs text-orange-600 mt-1">"学习 Python" 距截止日还有 2 天且未启动</p>
+            <button class="mt-2 text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded hover:bg-orange-300">去处理 →</button>
+          </div>
+          <div class="mt-3 p-3 bg-yellow-50 rounded-lg">
+            <p class="text-xs text-yellow-700">💊 治愈建议：你已连续推迟"运动计划"2次，建议拆分为更小步骤</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 页面 3: 目标分解 ==================== -->
+  <div id="page-goals" class="page p-6 max-w-7xl mx-auto">
+    <div class="grid grid-cols-3 gap-6">
+      <!-- 左列: 目标输入 + 里程碑 -->
+      <div class="col-span-2 space-y-6">
+        <!-- 目标输入 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-4 flex items-center gap-2">
+            <span class="text-lg">🎯</span> AI 目标分解引擎（R2 · Phase 2）
+          </h3>
+          <div class="flex gap-3">
+            <input type="text" placeholder="输入你的中长期目标，如：三个月学会 Python 数据分析" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+            <button class="px-5 py-2 bg-indigo-500 text-white rounded-lg text-sm hover:bg-indigo-600">AI 分解</button>
+          </div>
+          <div class="mt-3 flex gap-2">
+            <span class="text-xs text-gray-400">示例：</span>
+            <span class="text-xs bg-gray-100 px-2 py-0.5 rounded cursor-pointer hover:bg-gray-200">学会 Python</span>
+            <span class="text-xs bg-gray-100 px-2 py-0.5 rounded cursor-pointer hover:bg-gray-200">考研复习</span>
+            <span class="text-xs bg-gray-100 px-2 py-0.5 rounded cursor-pointer hover:bg-gray-200">健身减脂</span>
+          </div>
+        </div>
+
+        <!-- 里程碑链 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-4">里程碑链（AI 生成结果示例）</h3>
+          <div class="relative">
+            <!-- 进度连接线 -->
+            <div class="absolute left-5 top-6 bottom-6 w-0.5 bg-gray-200"></div>
+            <!-- 里程碑节点 -->
+            <div class="space-y-4">
+              <div class="flex items-start gap-4 relative">
+                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold z-10">✓</div>
+                <div class="flex-1 bg-green-50 rounded-lg p-3 border border-green-200">
+                  <div class="text-sm font-medium text-green-700">里程碑 1：环境搭建</div>
+                  <div class="text-xs text-gray-500 mt-1">安装 Python + IDE + 基础配置</div>
+                  <div class="flex gap-2 mt-2">
+                    <span class="text-xs bg-white px-2 py-0.5 rounded border">10分钟 · 配置环境</span>
+                    <span class="text-xs bg-white px-2 py-0.5 rounded border">25分钟 · 熟悉IDE</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-start gap-4 relative">
+                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold z-10">✓</div>
+                <div class="flex-1 bg-green-50 rounded-lg p-3 border border-green-200">
+                  <div class="text-sm font-medium text-green-700">里程碑 2：基础语法</div>
+                  <div class="text-xs text-gray-500 mt-1">变量、循环、函数、面向对象基础</div>
+                  <div class="flex gap-2 mt-2">
+                    <span class="text-xs bg-white px-2 py-0.5 rounded border">25分钟 · 变量与类型</span>
+                    <span class="text-xs bg-white px-2 py-0.5 rounded border">40分钟 · 函数与模块</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-start gap-4 relative">
+                <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-bold z-10">3</div>
+                <div class="flex-1 bg-indigo-50 rounded-lg p-3 border border-indigo-200 ring-2 ring-indigo-200">
+                  <div class="text-sm font-medium text-indigo-700">里程碑 3：数据处理 ← 当前</div>
+                  <div class="text-xs text-gray-500 mt-1">Pandas + NumPy + 数据清洗</div>
+                  <div class="flex gap-2 mt-2">
+                    <span class="text-xs bg-white px-2 py-0.5 rounded border">25分钟 · Pandas入门</span>
+                    <span class="text-xs bg-white px-2 py-0.5 rounded border">40分钟 · 数据清洗实战</span>
+                    <span class="text-xs bg-white px-2 py-0.5 rounded border">40分钟 · 数据合并</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-start gap-4 relative">
+                <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white text-sm font-bold z-10">4</div>
+                <div class="flex-1 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                  <div class="text-sm font-medium text-gray-500">里程碑 4：数据可视化</div>
+                  <div class="text-xs text-gray-400 mt-1">Matplotlib + Seaborn 图表绑定</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-4 relative">
+                <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white text-sm font-bold z-10">5</div>
+                <div class="flex-1 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                  <div class="text-sm font-medium text-gray-500">里程碑 5：实战项目</div>
+                  <div class="text-xs text-gray-400 mt-1">完成一个完整的数据分析项目</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右列: 时间梯度 + 奖励 -->
+      <div class="col-span-1 space-y-6">
+        <!-- 时间梯度选择器 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-lg">⏱️</span> 时间梯度
+          </h3>
+          <div class="space-y-2">
+            <button class="w-full p-3 bg-gray-50 rounded-lg border border-gray-200 text-left hover:bg-indigo-50 hover:border-indigo-200">
+              <div class="text-sm font-medium">🟢 10 分钟 · 快速任务</div>
+              <div class="text-xs text-gray-400">适合碎片时间</div>
+            </button>
+            <button class="w-full p-3 bg-indigo-50 rounded-lg border-2 border-indigo-300 text-left">
+              <div class="text-sm font-medium text-indigo-700">🟡 25 分钟 · 标准专注</div>
+              <div class="text-xs text-indigo-400">推荐 · 番茄钟标准</div>
+            </button>
+            <button class="w-full p-3 bg-gray-50 rounded-lg border border-gray-200 text-left hover:bg-indigo-50 hover:border-indigo-200">
+              <div class="text-sm font-medium">🔴 40 分钟 · 深度工作</div>
+              <div class="text-xs text-gray-400">适合复杂任务</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 奖励配置 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-lg">🏆</span> 奖励配置（R7 · Phase 2）
+          </h3>
+          <div class="space-y-3">
+            <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+              <div class="text-xs text-yellow-600 font-medium">🌟 终极奖励</div>
+              <div class="text-sm text-yellow-800 mt-1">完成全部里程碑 → 购买新键盘</div>
+            </div>
+            <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div class="text-xs text-gray-500 font-medium">⭐ 阶段奖励</div>
+              <div class="text-sm text-gray-700 mt-1">完成里程碑 3 → +100 金币</div>
+            </div>
+          </div>
+          <button class="mt-3 w-full py-2 text-sm text-indigo-500 border border-indigo-200 rounded-lg hover:bg-indigo-50">+ 配置奖励</button>
+        </div>
+
+        <!-- AI 降级提示 -->
+        <div class="bg-gray-100 rounded-xl p-4 border border-gray-200">
+          <div class="text-xs text-gray-500">
+            <span class="font-medium">ℹ️ 降级机制</span>
+            <p class="mt-1">AI 不可用时自动切换本地模板生成，确保核心功能可用</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 页面 4: 属性详情 ==================== -->
+  <div id="page-attributes" class="page p-6 max-w-7xl mx-auto">
+    <!-- 属性分类 Tab -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold flex items-center gap-2">
+          <span class="text-lg">📊</span> 生活属性详情（R3）
+        </h3>
+        <div class="flex gap-1">
+          <button class="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full">🏃 生理需求</button>
+          <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">😊 情感状态</button>
+          <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">🧠 能力属性</button>
+          <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">⚡ 精力维度</button>
+        </div>
+      </div>
+
+      <!-- 属性卡片网格 -->
+      <div class="grid grid-cols-4 gap-4">
+        <div class="bg-green-50 rounded-lg p-4 border border-green-200 cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-green-700">💤 睡眠质量</span>
+            <span class="text-lg font-bold text-green-600">80</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+            <div class="bg-green-400 h-2 rounded-full" style="width: 80%"></div>
+          </div>
+          <div class="text-xs text-gray-400">趋势占位：近7天 ↗</div>
+        </div>
+        <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200 cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-yellow-700">💧 饮水量</span>
+            <span class="text-lg font-bold text-yellow-600">50</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+            <div class="bg-yellow-400 h-2 rounded-full" style="width: 50%"></div>
+          </div>
+          <div class="text-xs text-gray-400">趋势占位：近7天 →</div>
+        </div>
+        <div class="bg-red-50 rounded-lg p-4 border border-red-200 cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-red-700">🏃 运动量</span>
+            <span class="text-lg font-bold text-red-500">20</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+            <div class="bg-red-400 h-2 rounded-full" style="width: 20%"></div>
+          </div>
+          <div class="text-xs text-gray-400">趋势占位：近7天 ↘</div>
+        </div>
+        <div class="bg-green-50 rounded-lg p-4 border border-green-200 cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-green-700">🥗 饮食规律</span>
+            <span class="text-lg font-bold text-green-600">70</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+            <div class="bg-green-400 h-2 rounded-full" style="width: 70%"></div>
+          </div>
+          <div class="text-xs text-gray-400">趋势占位：近7天 ↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 选中属性详情 -->
+    <div class="grid grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <h3 class="font-semibold mb-4">💤 睡眠质量 · 30 天趋势</h3>
+        <!-- 趋势图占位 -->
+        <div class="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+          <div class="text-center">
+            <div class="text-3xl mb-2">📈</div>
+            <div class="text-sm text-gray-400">ECharts 趋势图占位</div>
+            <div class="text-xs text-gray-300 mt-1">30 天折线图 · 后续替换</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <h3 class="font-semibold mb-4">手动更新</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="text-sm text-gray-600 block mb-1">当前数值</label>
+            <input type="number" value="80" min="0" max="100" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+          </div>
+          <div>
+            <label class="text-sm text-gray-600 block mb-1">备注（可选）</label>
+            <input type="text" placeholder="如：昨晚 11 点入睡，睡了 7.5 小时" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+          </div>
+          <div>
+            <label class="text-sm text-gray-600 block mb-1">颜色阈值设置</label>
+            <div class="flex gap-2 items-center text-xs">
+              <span class="text-red-500">红 &lt; 30</span>
+              <span class="text-yellow-500">黄 30-60</span>
+              <span class="text-green-500">绿 &gt; 60</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-indigo-500 text-white rounded-lg text-sm hover:bg-indigo-600">保存更新</button>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h4 class="text-sm font-medium text-gray-600 mb-2">⚡ 精力评估详情</h4>
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">数据来源</span>
+              <span class="text-gray-800">手动输入</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">昨晚睡眠</span>
+              <span class="text-gray-800">7.5 小时</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">起床时间</span>
+              <span class="text-gray-800">07:00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">昨日专注</span>
+              <span class="text-gray-800">3.5 小时</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 自定义属性 -->
+    <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold">+ 自定义属性</h3>
+        <button class="px-4 py-2 bg-indigo-500 text-white rounded-lg text-sm hover:bg-indigo-600">新增属性</button>
+      </div>
+      <p class="text-sm text-gray-400 mt-2">创建属于你自己的追踪维度，与预设属性享有相同的颜色编码和趋势展示</p>
+    </div>
+  </div>
+
+  <!-- ==================== 页面 5: 成长中心 ==================== -->
+  <div id="page-growth" class="page p-6 max-w-7xl mx-auto">
+    <!-- 专注热力图 -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+      <h3 class="font-semibold mb-4 flex items-center gap-2">
+        <span class="text-lg">🔥</span> 专注热力图（R5 · 365 天）
+      </h3>
+      <!-- 热力图占位 -->
+      <div class="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+        <div class="text-center">
+          <div class="text-3xl mb-2">📊</div>
+          <div class="text-sm text-gray-400">GitHub 风格热力图占位（365 天网格）</div>
+          <div class="text-xs text-gray-300 mt-1">Canvas 渲染 · 颜色深浅 = 当日专注时长</div>
+          <!-- 模拟热力图色块 -->
+          <div class="flex gap-0.5 mt-3 justify-center">
+            <div class="w-3 h-3 bg-gray-200 rounded-sm"></div>
+            <div class="w-3 h-3 bg-green-100 rounded-sm"></div>
+            <div class="w-3 h-3 bg-green-200 rounded-sm"></div>
+            <div class="w-3 h-3 bg-green-300 rounded-sm"></div>
+            <div class="w-3 h-3 bg-green-400 rounded-sm"></div>
+            <div class="w-3 h-3 bg-green-500 rounded-sm"></div>
+            <div class="w-3 h-3 bg-green-600 rounded-sm"></div>
+            <span class="text-xs text-gray-400 ml-2 self-center">少 → 多</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <!-- 等级经验曲线 -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <h3 class="font-semibold mb-4 flex items-center gap-2">
+          <span class="text-lg">📈</span> 等级经验曲线
+        </h3>
+        <div class="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+          <div class="text-center">
+            <div class="text-3xl mb-2">📉</div>
+            <div class="text-sm text-gray-400">折线图占位</div>
+            <div class="text-xs text-gray-300 mt-1">等级随时间变化趋势</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 月度统计 -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <h3 class="font-semibold mb-4 flex items-center gap-2">
+          <span class="text-lg">📅</span> 月度统计（柳比歇夫式）
+        </h3>
+        <div class="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+          <div class="text-center">
+            <div class="text-3xl mb-2">🥧</div>
+            <div class="text-sm text-gray-400">饼图占位</div>
+            <div class="text-xs text-gray-300 mt-1">工作 40% · 学习 30% · 阅读 20% · 其他 10%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 成就徽章墙 -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+      <h3 class="font-semibold mb-4 flex items-center gap-2">
+        <span class="text-lg">🏅</span> 成就徽章墙
+      </h3>
+      <div class="grid grid-cols-6 gap-3">
+        <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-300 text-center">
+          <div class="text-2xl mb-1">🌟</div>
+          <div class="text-xs text-yellow-700 font-medium">初次启程</div>
+          <div class="text-xs text-gray-400">完成首个任务</div>
+        </div>
+        <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-300 text-center">
+          <div class="text-2xl mb-1">🔥</div>
+          <div class="text-xs text-yellow-700 font-medium">连续七天</div>
+          <div class="text-xs text-gray-400">连续打卡 7 天</div>
+        </div>
+        <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-300 text-center">
+          <div class="text-2xl mb-1">💪</div>
+          <div class="text-xs text-yellow-700 font-medium">精力充沛</div>
+          <div class="text-xs text-gray-400">精力评估全绿</div>
+        </div>
+        <div class="p-3 bg-gray-100 rounded-lg border border-gray-200 text-center opacity-50">
+          <div class="text-2xl mb-1">🔒</div>
+          <div class="text-xs text-gray-500 font-medium">月度战士</div>
+          <div class="text-xs text-gray-400">连续 30 天</div>
+        </div>
+        <div class="p-3 bg-gray-100 rounded-lg border border-gray-200 text-center opacity-50">
+          <div class="text-2xl mb-1">🔒</div>
+          <div class="text-xs text-gray-500 font-medium">Boss 猎人</div>
+          <div class="text-xs text-gray-400">完成首个 Boss</div>
+        </div>
+        <div class="p-3 bg-gray-100 rounded-lg border border-gray-200 text-center opacity-50">
+          <div class="text-2xl mb-1">🔒</div>
+          <div class="text-xs text-gray-500 font-medium">社交达人</div>
+          <div class="text-xs text-gray-400">加入小队 (Phase 3)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 社交入口（Phase 3） -->
+    <div class="bg-white rounded-xl shadow-sm border border-dashed border-gray-300 p-5">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-2xl">👥</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-gray-500">社交协作（Phase 3 · R9）</h3>
+          <p class="text-sm text-gray-400 mt-1">组队挑战 Boss · 共同伤害机制 · 公会系统 · 小队排行榜</p>
+        </div>
+        <button class="px-4 py-2 bg-gray-200 text-gray-500 rounded-lg text-sm cursor-not-allowed">即将开放</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 底部信息 ==================== -->
+  <footer class="text-center py-6 text-xs text-gray-400 border-t border-gray-200 mt-8">
+    <p>游戏化生活仪表盘 · 原型预览 · 基于 unified-analysis.md 产出</p>
+    <p class="mt-1">技术栈：React + Tailwind + shadcn/ui | Python + FastAPI | MongoDB + Redis</p>
+  </footer>
+
+  <!-- ==================== Tab 切换逻辑 ==================== -->
+  <script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // 更新 Tab 按钮状态
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // 切换页面
+        const pageId = btn.getAttribute('data-page');
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + pageId).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

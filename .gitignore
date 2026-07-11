@@ -1,0 +1,45 @@
+# ===== 敏感文件隔离 =====
+# 以下内容绝不提交到公开仓库
+
+# 商业策略（含定价/市场/竞品内部分析）
+docs/business-analysis.md
+docs/business-analysis-extra.md
+docs/magic-skill-tree.md
+
+# 私有目录（风险防御/职业规划/商业策略）
+# 注：.private/ 在仓库根目录，此处作为双重保险
+**/.private/
+
+# ===== 通用排除 =====
+.env
+.env.*
+*.key
+*.pem
+*.secret
+secrets/
+
+# ===== 系统文件 =====
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.sublime-*
+
+# ===== 构建产物 =====
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ===== 临时文件 =====
+tmp/
+temp/
+*.log
