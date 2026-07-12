@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏人生·少年版 GameLife Kids — 习惯养成 AI 学伴</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" onerror="window.__cf=true"></script>
+<style>
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  @keyframes pop { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+  @keyframes sparkle { 0%,100%{opacity:1} 50%{opacity:.4} }
+  @keyframes weatherRain { 0%{transform:translateY(-10px);opacity:0} 50%{opacity:1} 100%{transform:translateY(20px);opacity:0} }
+  .float { animation: float 3s ease-in-out infinite; }
+  .pop { animation: pop .4s ease-out; }
+  .sparkle { animation: sparkle 2s ease-in-out infinite; }
+  .card-hover { transition: all .3s; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,.15); }
+  .mood-btn { transition: all .2s; cursor: pointer; }
+  .mood-btn:hover { transform: scale(1.15); }
+  .mood-btn.selected { transform: scale(1.2); box-shadow: 0 0 20px rgba(99,102,241,.4); }
+  .subject-card { transition: all .3s; cursor: pointer; }
+  .subject-card:hover { transform: scale(1.03); }
+  .progress-ring { transition: stroke-dashoffset .8s ease-out; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+
+<!-- Header -->
+<header class="bg-white/80 backdrop-blur border-b border-purple-100 sticky top-0 z-50">
+  <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-2xl">🌟</span>
+      <span class="font-bold text-purple-700">游戏人生·少年版</span>
+      <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full">GameLife Kids</span>
+    </div>
+    <div class="flex items-center gap-3 text-sm">
+      <span class="text-purple-600 font-bold">⭐ Lv.5 小学徒</span>
+      <span class="text-gray-300">|</span>
+      <span class="text-gray-500">🐱 小伙伴：星星猫</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-8 space-y-8">
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl p-8 text-white shadow-xl">
+    <div class="flex flex-col md:flex-row items-center gap-6">
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold mb-2">今天也要变强哦！✨</h1>
+        <p class="text-purple-100 mb-4">完成学习任务 → 修炼技能 → 喂养你的星星猫</p>
+        <div class="flex gap-3">
+          <div class="bg-white/20 rounded-xl px-4 py-2 text-center"><div class="text-xl font-bold">7 🔥</div><div class="text-xs">连续天数</div></div>
+          <div class="bg-white/20 rounded-xl px-4 py-2 text-center"><div class="text-xl font-bold">420</div><div class="text-xs">星星币</div></div>
+          <div class="bg-white/20 rounded-xl px-4 py-2 text-center"><div class="text-xl font-bold">Lv.5</div><div class="text-xs">等级</div></div>
+        </div>
+      </div>
+      <div class="text-7xl float">🐱</div>
+    </div>
+  </section>
+
+  <!-- 学科修炼（RPG 科目） -->
+  <section>
+    <h2 class="text-xl font-bold text-gray-800 mb-4">📚 今日修炼</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="subject-card bg-white rounded-2xl p-5 border-2 border-blue-100 shadow-sm" onclick="selectSubject(this)">
+        <div class="text-3xl mb-2">📐</div>
+        <div class="font-bold text-blue-700">算系修炼</div>
+        <div class="text-xs text-gray-500 mt-1">数学 · 完成 3 道应用题</div>
+        <div class="mt-3 h-2 bg-blue-100 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width:60%"></div></div>
+        <div class="text-xs text-blue-600 mt-1">60% · 还差 2 题</div>
+      </div>
+      <div class="subject-card bg-white rounded-2xl p-5 border-2 border-green-100 shadow-sm" onclick="selectSubject(this)">
+        <div class="text-3xl mb-2">📖</div>
+        <div class="font-bold text-green-700">文系修炼</div>
+        <div class="text-xs text-gray-500 mt-1">语文 · 阅读 30 分钟</div>
+        <div class="mt-3 h-2 bg-green-100 rounded-full overflow-hidden"><div class="h-full bg-green-500 rounded-full" style="width:100%"></div></div>
+        <div class="text-xs text-green-600 mt-1">✅ 今日已完成！</div>
+      </div>
+      <div class="subject-card bg-white rounded-2xl p-5 border-2 border-orange-100 shadow-sm" onclick="selectSubject(this)">
+        <div class="text-3xl mb-2">🔤</div>
+        <div class="font-bold text-orange-700">言系修炼</div>
+        <div class="text-xs text-gray-500 mt-1">英语 · 背 10 个单词</div>
+        <div class="mt-3 h-2 bg-orange-100 rounded-full overflow-hidden"><div class="h-full bg-orange-500 rounded-full" style="width:30%"></div></div>
+        <div class="text-xs text-orange-600 mt-1">30% · 加油！</div>
+      </div>
+      <div class="subject-card bg-white rounded-2xl p-5 border-2 border-purple-100 shadow-sm" onclick="selectSubject(this)">
+        <div class="text-3xl mb-2">🔬</div>
+        <div class="font-bold text-purple-700">理系修炼</div>
+        <div class="text-xs text-gray-500 mt-1">科学 · 观察日记 1 篇</div>
+        <div class="mt-3 h-2 bg-purple-100 rounded-full overflow-hidden"><div class="h-full bg-purple-500 rounded-full" style="width:0%"></div></div>
+        <div class="text-xs text-purple-600 mt-1">还没开始哦~</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 情绪天气 -->
+  <section class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+    <h2 class="text-xl font-bold text-gray-800 mb-2">🌤️ 今天的心情天气</h2>
+    <p class="text-sm text-gray-500 mb-4">点击选择你现在的心情，星星猫会陪你哦~</p>
+    <div class="flex justify-center gap-6 mb-4">
+      <div class="mood-btn text-center" onclick="selectMood(this,'sunny')">
+        <div class="text-5xl">☀️</div>
+        <div class="text-xs text-gray-500 mt-1">超开心</div>
+      </div>
+      <div class="mood-btn text-center" onclick="selectMood(this,'cloudy')">
+        <div class="text-5xl">⛅</div>
+        <div class="text-xs text-gray-500 mt-1">还行吧</div>
+      </div>
+      <div class="mood-btn text-center" onclick="selectMood(this,'rainy')">
+        <div class="text-5xl">🌧️</div>
+        <div class="text-xs text-gray-500 mt-1">有点难过</div>
+      </div>
+      <div class="mood-btn text-center" onclick="selectMood(this,'stormy')">
+        <div class="text-5xl">⛈️</div>
+        <div class="text-xs text-gray-500 mt-1">很烦躁</div>
+      </div>
+    </div>
+    <div id="moodResponse" class="hidden bg-purple-50 rounded-2xl p-4 border border-purple-100">
+      <div class="flex items-start gap-3">
+        <span class="text-3xl">🐱</span>
+        <div>
+          <div class="font-medium text-purple-700">星星猫说：</div>
+          <div id="moodText" class="text-sm text-gray-600 mt-1"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 习惯打卡 + 宠物成长 -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- 习惯打卡 -->
+    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+      <h2 class="text-lg font-bold text-gray-800 mb-4">✅ 今日习惯</h2>
+      <div class="space-y-3">
+        <div class="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
+          <span class="text-xl">✅</span>
+          <div class="flex-1"><div class="font-medium text-green-800">早起刷牙</div><div class="text-xs text-green-600">连续 14 天</div></div>
+          <span class="text-yellow-500 sparkle">⭐</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
+          <span class="text-xl">✅</span>
+          <div class="flex-1"><div class="font-medium text-green-800">阅读 30 分钟</div><div class="text-xs text-green-600">连续 7 天</div></div>
+          <span class="text-yellow-500 sparkle">⭐</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <span class="text-xl">⬜</span>
+          <div class="flex-1"><div class="font-medium text-gray-700">整理书包</div><div class="text-xs text-gray-500">今天还没做</div></div>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <span class="text-xl">⬜</span>
+          <div class="flex-1"><div class="font-medium text-gray-700">运动 20 分钟</div><div class="text-xs text-gray-500">今天还没做</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 宠物成长 -->
+    <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-3xl p-6 shadow-sm border border-yellow-100">
+      <h2 class="text-lg font-bold text-gray-800 mb-4">🐱 星星猫的成长</h2>
+      <div class="text-center">
+        <div class="text-7xl float mb-3">🐱</div>
+        <div class="text-sm text-gray-600 mb-2">你的小伙伴正在变强！</div>
+        <div class="bg-white rounded-xl p-3 inline-block">
+          <div class="text-xs text-gray-500 mb-1">亲密度</div>
+          <div class="h-3 bg-yellow-100 rounded-full overflow-hidden w-40">
+            <div class="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full" style="width:72%"></div>
+          </div>
+          <div class="text-xs text-orange-600 mt-1">72/100 · 再完成 3 天任务可进化！</div>
+        </div>
+        <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
+          <div class="bg-white rounded-lg p-2"><div class="text-lg">🥚</div><div class="text-gray-500">蛋蛋期</div></div>
+          <div class="bg-white rounded-lg p-2 border-2 border-orange-300"><div class="text-lg">🐱</div><div class="text-orange-600 font-bold">当前</div></div>
+          <div class="bg-white/50 rounded-lg p-2"><div class="text-lg opacity-30">🦁</div><div class="text-gray-400">进化</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 成长树（纵向对比，无排行榜） -->
+  <section class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+    <h2 class="text-xl font-bold text-gray-800 mb-2">🌳 我的成长树</h2>
+    <p class="text-sm text-gray-500 mb-4">只和昨天的自己比，每天进步一点点</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="text-center card-hover bg-blue-50 rounded-2xl p-4">
+        <div class="text-3xl mb-1">📐</div>
+        <div class="font-bold text-blue-700">算系</div>
+        <div class="text-2xl font-bold text-blue-600 mt-1">Lv.4</div>
+        <div class="text-xs text-gray-500">上周 Lv.3 ↑</div>
+      </div>
+      <div class="text-center card-hover bg-green-50 rounded-2xl p-4">
+        <div class="text-3xl mb-1">📖</div>
+        <div class="font-bold text-green-700">文系</div>
+        <div class="text-2xl font-bold text-green-600 mt-1">Lv.6</div>
+        <div class="text-xs text-gray-500">上周 Lv.5 ↑</div>
+      </div>
+      <div class="text-center card-hover bg-orange-50 rounded-2xl p-4">
+        <div class="text-3xl mb-1">🔤</div>
+        <div class="font-bold text-orange-700">言系</div>
+        <div class="text-2xl font-bold text-orange-600 mt-1">Lv.3</div>
+        <div class="text-xs text-gray-500">上周 Lv.3 →</div>
+      </div>
+      <div class="text-center card-hover bg-purple-50 rounded-2xl p-4">
+        <div class="text-3xl mb-1">🔬</div>
+        <div class="font-bold text-purple-700">理系</div>
+        <div class="text-2xl font-bold text-purple-600 mt-1">Lv.2</div>
+        <div class="text-xs text-gray-500">上周 Lv.2 →</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 家长端概览 -->
+  <section class="bg-gray-900 rounded-3xl p-6 text-white">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="text-xl">👨‍👩‍👧</span>
+      <h2 class="text-lg font-bold">家长端 · 本周成长报告</h2>
+      <span class="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded-full ml-2">仅展示趋势，不暴露具体内容</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div class="bg-gray-800 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-emerald-400">85%</div>
+        <div class="text-sm text-gray-400">本周习惯完成率</div>
+        <div class="text-xs text-emerald-500">↑ 比上周 +12%</div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-amber-400">4.2</div>
+        <div class="text-sm text-gray-400">平均每日心情分</div>
+        <div class="text-xs text-gray-500">（满分 5 分）</div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-purple-400">18</div>
+        <div class="text-sm text-gray-400">今日使用分钟</div>
+        <div class="text-xs text-emerald-500">✅ 未超 20 分钟上限</div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-sm text-gray-400 mb-2">情绪趋势（近 7 天）</div>
+        <canvas id="moodChart" height="150"></canvas>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-sm text-gray-400 mb-2">各科时间分布</div>
+        <canvas id="subjectChart" height="150"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- 反成瘾设计说明 -->
+  <section class="bg-gradient-to-r from-green-50 to-teal-50 rounded-3xl p-6 border border-green-100">
+    <h2 class="text-xl font-bold text-gray-800 mb-3">🛡️ 健康游戏化设计</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+      <div class="bg-white rounded-xl p-3 text-center">
+        <div class="text-2xl mb-1">🚫</div>
+        <div class="font-medium">无排行榜</div>
+        <div class="text-xs text-gray-500">只和自己比</div>
+      </div>
+      <div class="bg-white rounded-xl p-3 text-center">
+        <div class="text-2xl mb-1">⏰</div>
+        <div class="font-medium">每日 20 分钟</div>
+        <div class="text-xs text-gray-500">到时间自动提醒</div>
+      </div>
+      <div class="bg-white rounded-xl p-3 text-center">
+        <div class="text-2xl mb-1">📉</div>
+        <div class="font-medium">奖励递减</div>
+        <div class="text-xs text-gray-500">30 天后引导内驱</div>
+      </div>
+      <div class="bg-white rounded-xl p-3 text-center">
+        <div class="text-2xl mb-1">🔒</div>
+        <div class="font-medium">隐私保护</div>
+        <div class="text-xs text-gray-500">家长只看趋势</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-400 text-sm py-8">
+    <p>游戏人生·少年版 GameLife Kids · TRAE AI 创造力大赛 · 青少年身心健康赛道</p>
+    <p class="mt-1">让每个孩子看见自己的成长 🌱</p>
+  </footer>
+</main>
+
+<script>
+// Subject select
+function selectSubject(el) {
+  document.querySelectorAll('.subject-card').forEach(c => c.style.borderColor = '');
+  el.style.borderColor = '#8b5cf6';
+  el.style.boxShadow = '0 0 20px rgba(139,92,246,.2)';
+}
+
+// Mood selection
+const moodResponses = {
+  sunny: '太棒了！今天心情像太阳一样明亮~ 继续保持，星星猫也很开心呢！🌞',
+  cloudy: '没关系，不是每天都要超级开心。做一件小事也算进步哦~ ⛅',
+  rainy: '难过的时候，深呼吸三次。你可以跟星星猫说说发生了什么，它会一直陪着你。🌧️💙',
+  stormy: '现在可能很烦躁，但暴风雨总会过去的。要不要先休息一下？星星猫在这里陪你。⛈️→☀️'
+};
+function selectMood(el, mood) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('moodResponse').classList.remove('hidden');
+  document.getElementById('moodText').textContent = moodResponses[mood];
+}
+
+// Charts (parent dashboard)
+if (!window.__cf) {
+  new Chart(document.getElementById('moodChart'), {
+    type: 'line',
+    data: {
+      labels: ['周一','周二','周三','周四','周五','周六','周日'],
+      datasets: [{ label:'心情分', data:[4,5,3,4,4,5,4], borderColor:'#a78bfa', backgroundColor:'#a78bfa30', fill:true, tension:.4, pointRadius:5, pointBackgroundColor:'#a78bfa', borderWidth:2 }]
+    },
+    options: { responsive:true, plugins:{legend:{display:false}}, scales:{y:{min:1,max:5,ticks:{color:'#9ca3af'},grid:{color:'#374151'}},x:{ticks:{color:'#9ca3af'},grid:{display:false}}} }
+  });
+  new Chart(document.getElementById('subjectChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['算系','文系','言系','理系'],
+      datasets: [{ data:[45,30,20,15], backgroundColor:['#3b82f6','#22c55e','#f97316','#a855f7'], borderWidth:0 }]
+    },
+    options: { responsive:true, cutout:'55%', plugins:{legend:{position:'bottom',labels:{color:'#9ca3af',padding:8}}} }
+  });
+}
+</script>
+</body>
+</html>

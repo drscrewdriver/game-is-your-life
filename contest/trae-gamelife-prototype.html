@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏人生 GameLife — RPG × AI 自我管理</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" onerror="window.__cf=true"></script>
+<style>
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+  @keyframes xpGain { 0% { opacity:1; transform:translateY(0); } 100% { opacity:0; transform:translateY(-40px); } }
+  @keyframes barFill { from { width:0; } }
+  .fade-up { animation: fadeUp .6s ease-out both; }
+  .xp-pop { animation: xpGain 1.2s ease-out forwards; position:absolute; font-weight:700; color:#10b981; pointer-events:none; }
+  .bar-fill { animation: barFill 1s ease-out; }
+  .stat-card { transition: all .3s; }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,.1); }
+  .task-done { transition: all .4s; }
+  .task-done.done { opacity:.5; text-decoration:line-through; }
+  .energy-dot { width:12px; height:12px; border-radius:50%; display:inline-block; }
+</style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+
+<!-- Header -->
+<header class="border-b border-gray-800 bg-gray-950/80 backdrop-blur sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">🎮</span>
+      <span class="font-bold text-lg">游戏人生 <span class="text-indigo-400 text-sm font-normal">GameLife</span></span>
+    </div>
+    <div class="flex items-center gap-4 text-sm">
+      <span class="text-amber-400 font-bold">⚡ Lv.7 魔法师</span>
+      <span class="text-gray-400">|</span>
+      <span class="text-emerald-400">2,840 / 3,200 XP</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 py-8 space-y-8">
+
+  <!-- Hero: 三层反馈 -->
+  <section class="fade-up bg-gradient-to-r from-indigo-900/40 to-purple-900/40 rounded-2xl p-8 border border-indigo-800/30">
+    <h1 class="text-3xl font-bold mb-2">即时反馈，让每一步都被看见</h1>
+    <p class="text-gray-400 mb-6">三层反馈架构：秒级属性变化 → 周级趋势洞察 → 年级成长叙事</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-gray-900/60 rounded-xl p-5 border border-gray-800">
+        <div class="text-indigo-400 text-sm font-medium mb-1">⚡ 秒级反馈</div>
+        <div class="font-semibold mb-1">完成任务 → 属性实时变化</div>
+        <div class="text-gray-500 text-sm">"刚写完代码 → 智力 +2 → 面板立刻更新"</div>
+      </div>
+      <div class="bg-gray-900/60 rounded-xl p-5 border border-gray-800">
+        <div class="text-amber-400 text-sm font-medium mb-1">📊 周级反馈</div>
+        <div class="font-semibold mb-1">精力评估 → AI 趋势洞察</div>
+        <div class="text-gray-500 text-sm">"周二专注力最高 → AI 建议难题排到周二"</div>
+      </div>
+      <div class="bg-gray-900/60 rounded-xl p-5 border border-gray-800">
+        <div class="text-emerald-400 text-sm font-medium mb-1">🏆 年级反馈</div>
+        <div class="font-semibold mb-1">经验累积 → 成长叙事</div>
+        <div class="text-gray-500 text-sm">"3 个月 Lv.3→Lv.7 → 解锁'自律之星'"</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 属性面板 + 经验值 -->
+  <section class="fade-up grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- 属性面板 -->
+    <div class="md:col-span-2 bg-gray-900 rounded-2xl p-6 border border-gray-800">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-bold text-lg">📊 生活属性面板</h2>
+        <span class="text-xs text-gray-500">今日更新</span>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>🧠 智力</span><span class="text-indigo-400">+2 → 78</span></div>
+          <div class="h-3 bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-indigo-500 rounded-full bar-fill" style="width:78%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>💪 体力</span><span class="text-emerald-400">-1 → 62</span></div>
+          <div class="h-3 bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full bar-fill" style="width:62%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>🗣️ 社交</span><span class="text-amber-400">+1 → 55</span></div>
+          <div class="h-3 bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-amber-500 rounded-full bar-fill" style="width:55%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>🎯 专注</span><span class="text-purple-400">+3 → 85</span></div>
+          <div class="h-3 bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-purple-500 rounded-full bar-fill" style="width:85%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>😌 精力</span><span class="text-cyan-400">当前 72/100</span></div>
+          <div class="h-3 bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-cyan-500 rounded-full bar-fill" style="width:72%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 经验值进度 -->
+    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 text-center">
+      <div class="text-5xl font-bold text-indigo-400 mb-2">Lv.7</div>
+      <div class="text-sm text-gray-400 mb-4">红魔法师</div>
+      <div class="relative h-4 bg-gray-800 rounded-full overflow-hidden mb-2">
+        <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full bar-fill" style="width:88.75%"></div>
+      </div>
+      <div class="text-xs text-gray-500">2,840 / 3,200 XP → Lv.8</div>
+      <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
+        <div class="bg-gray-800 rounded-lg p-2"><div class="text-emerald-400 font-bold">12</div>今日任务</div>
+        <div class="bg-gray-800 rounded-lg p-2"><div class="text-amber-400 font-bold">7 🔥</div>连续天数</div>
+        <div class="bg-gray-800 rounded-lg p-2"><div class="text-indigo-400 font-bold">3</div>本周成就</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 今日任务 + AI 推荐 -->
+  <section class="fade-up grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- 今日副本任务 -->
+    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800">
+      <h2 class="font-bold text-lg mb-4">⚔️ 今日副本</h2>
+      <div class="space-y-3" id="taskList">
+        <div class="task-done flex items-center gap-3 p-3 bg-gray-800/50 rounded-xl cursor-pointer" onclick="toggleTask(this)">
+          <span class="w-5 h-5 rounded-full border-2 border-emerald-500 flex items-center justify-center text-xs text-emerald-400">✓</span>
+          <div class="flex-1"><div class="font-medium">完成 React 组件开发</div><div class="text-xs text-gray-500">智力 +3 · 专注 +2 · 约 2h</div></div>
+          <span class="text-emerald-400 text-sm">+85 XP</span>
+        </div>
+        <div class="task-done flex items-center gap-3 p-3 bg-gray-800/50 rounded-xl cursor-pointer" onclick="toggleTask(this)">
+          <span class="w-5 h-5 rounded-full border-2 border-emerald-500 flex items-center justify-center text-xs text-emerald-400">✓</span>
+          <div class="flex-1"><div class="font-medium">30 分钟有氧运动</div><div class="text-xs text-gray-500">体力 +4 · 精力 +10 · 约 30min</div></div>
+          <span class="text-emerald-400 text-sm">+60 XP</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-indigo-900/20 rounded-xl border border-indigo-800/30 cursor-pointer" onclick="toggleTask(this)">
+          <span class="w-5 h-5 rounded-full border-2 border-gray-600"></span>
+          <div class="flex-1"><div class="font-medium">阅读《Inspired》第 6 章</div><div class="text-xs text-gray-500">智力 +2 · 约 40min</div></div>
+          <span class="text-gray-500 text-sm">+45 XP</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-amber-900/20 rounded-xl border border-amber-800/30 cursor-pointer" onclick="toggleTask(this)">
+          <span class="w-5 h-5 rounded-full border-2 border-gray-600"></span>
+          <div class="flex-1"><div class="font-medium">⚠️ Boss 战：产品答辩准备</div><div class="text-xs text-gray-500">全属性 +2 · 约 1.5h · 高难度</div></div>
+          <span class="text-amber-400 text-sm">+150 XP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI 治未病 + 精力推荐 -->
+    <div class="space-y-4">
+      <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800">
+        <h2 class="font-bold text-lg mb-3">🤖 AI 精力推荐</h2>
+        <div class="bg-indigo-900/30 rounded-xl p-4 border border-indigo-800/30 mb-3">
+          <div class="text-sm text-indigo-300 mb-1">当前精力 72/100 · 适合中高难度任务</div>
+          <div class="text-sm text-gray-400">建议：现在做"产品答辩准备"（Boss 战），你的专注力在上午 10 点达到峰值。</div>
+        </div>
+        <div class="text-xs text-gray-500">基于近 7 天精力数据 · 置信度 82%</div>
+      </div>
+      <div class="bg-gray-900 rounded-2xl p-6 border border-amber-800/30">
+        <h2 class="font-bold text-lg mb-3 text-amber-400">⚠️ 治未病预警</h2>
+        <div class="bg-amber-900/20 rounded-xl p-4 border border-amber-800/20">
+          <div class="text-sm text-amber-300 mb-1">专注力已连续 2 天下降</div>
+          <div class="text-sm text-gray-400">建议：今天减少高认知负荷任务，安排轻量阅读或散步。你的身体可能在发出信号。</div>
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button class="px-3 py-1.5 bg-amber-800/30 text-amber-300 text-xs rounded-lg hover:bg-amber-800/50">调整今日计划</button>
+          <button class="px-3 py-1.5 bg-gray-800 text-gray-400 text-xs rounded-lg hover:bg-gray-700">查看详情</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI 目标分解 -->
+  <section class="fade-up bg-gray-900 rounded-2xl p-6 border border-gray-800">
+    <h2 class="font-bold text-lg mb-4">🎯 AI 目标分解引擎</h2>
+    <div class="flex gap-3 mb-4">
+      <input id="goalInput" type="text" value="3 个月内转行成为 AI 产品经理" class="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500" />
+      <button onclick="decomposeGoal()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-medium transition">AI 分解</button>
+    </div>
+    <div id="goalTree" class="space-y-3">
+      <div class="border-l-2 border-indigo-500 pl-4">
+        <div class="font-medium text-indigo-300">🏁 3 个月内转行成为 AI 产品经理</div>
+        <div class="mt-2 space-y-2 ml-4">
+          <div class="border-l-2 border-purple-500/50 pl-3">
+            <div class="text-sm text-purple-300">里程碑 1：掌握 PM 基础（第 1-4 周）</div>
+            <div class="text-xs text-gray-500 mt-1">→ 读完 3 本 PM 经典书 · 完成 PRD 写作练习 × 5 · 竞品分析报告 × 2</div>
+          </div>
+          <div class="border-l-2 border-amber-500/50 pl-3">
+            <div class="text-sm text-amber-300">里程碑 2：AI 领域深耕（第 5-8 周）</div>
+            <div class="text-xs text-gray-500 mt-1">→ 学习 AI 产品方法论 · 体验 10 款 AI 产品并写拆解 · 完成 1 个 AI 功能设计</div>
+          </div>
+          <div class="border-l-2 border-emerald-500/50 pl-3">
+            <div class="text-sm text-emerald-300">里程碑 3：实战验证（第 9-12 周）</div>
+            <div class="text-xs text-gray-500 mt-1">→ 完成 1 个完整 AI 产品 PRD · 参加 5 场产品面试 · 拿到 1 个 offer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 柳比歇夫统计 -->
+  <section class="fade-up grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800">
+      <h2 class="font-bold text-lg mb-4">📈 本周精力趋势</h2>
+      <canvas id="energyChart" height="200"></canvas>
+    </div>
+    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800">
+      <h2 class="font-bold text-lg mb-4">🕐 时间分布（柳比歇夫统计）</h2>
+      <canvas id="timeChart" height="200"></canvas>
+    </div>
+  </section>
+
+  <!-- 竞品对比 -->
+  <section class="fade-up bg-gray-900 rounded-2xl p-6 border border-gray-800">
+    <h2 class="font-bold text-lg mb-4">🆚 为什么选择游戏人生？</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="border-b border-gray-700 text-gray-400 text-left">
+          <th class="py-3 pr-4">能力</th><th class="pr-4">GameLife</th><th class="pr-4">Habitica</th><th class="pr-4">Todoist</th><th>Forest</th>
+        </tr></thead>
+        <tbody class="text-gray-300">
+          <tr class="border-b border-gray-800"><td class="py-3 pr-4">RPG 游戏化</td><td class="pr-4 text-emerald-400">✅ 多维属性</td><td class="pr-4 text-gray-400">✅ 基础</td><td class="pr-4 text-red-400">❌</td><td class="text-amber-400">⚠️ 仅专注</td></tr>
+          <tr class="border-b border-gray-800"><td class="py-3 pr-4">AI 智能体</td><td class="pr-4 text-emerald-400">✅ 目标分解+精力推荐</td><td class="pr-4 text-red-400">❌</td><td class="pr-4 text-red-400">❌</td><td class="text-red-400">❌</td></tr>
+          <tr class="border-b border-gray-800"><td class="py-3 pr-4">精力管理</td><td class="pr-4 text-emerald-400">✅ 治未病预警</td><td class="pr-4 text-red-400">❌</td><td class="pr-4 text-red-400">❌</td><td class="text-red-400">❌</td></tr>
+          <tr class="border-b border-gray-800"><td class="py-3 pr-4">三层反馈</td><td class="pr-4 text-emerald-400">✅ 秒/周/年级</td><td class="pr-4 text-amber-400">⚠️ 仅数值</td><td class="pr-4 text-red-400">❌</td><td class="text-amber-400">⚠️ 仅延迟</td></tr>
+          <tr><td class="py-3 pr-4">社交问责</td><td class="pr-4 text-emerald-400">✅ 组队Boss战</td><td class="pr-4 text-emerald-400">✅ 公会</td><td class="pr-4 text-red-400">❌</td><td class="text-red-400">❌</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-600 text-sm py-8">
+    <p>游戏人生 GameLife · TRAE AI 创造力大赛 · 学习工作赛道</p>
+    <p class="mt-1">用即时反馈驱动持续行动，让每一步都被看见</p>
+  </footer>
+</main>
+
+<script>
+// Task toggle
+function toggleTask(el) {
+  el.classList.toggle('done');
+  const check = el.querySelector('span:first-child');
+  if (el.classList.contains('done')) {
+    check.innerHTML = '✓';
+    check.classList.add('border-emerald-500','text-emerald-400');
+    check.classList.remove('border-gray-600');
+    // XP pop animation
+    const pop = document.createElement('div');
+    pop.className = 'xp-pop';
+    pop.textContent = '+XP';
+    pop.style.right = '1rem';
+    pop.style.top = '0';
+    el.style.position = 'relative';
+    el.appendChild(pop);
+    setTimeout(() => pop.remove(), 1200);
+  } else {
+    check.innerHTML = '';
+    check.classList.remove('border-emerald-500','text-emerald-400');
+    check.classList.add('border-gray-600');
+  }
+}
+
+// Goal decompose animation
+function decomposeGoal() {
+  const tree = document.getElementById('goalTree');
+  tree.style.opacity = '0';
+  setTimeout(() => { tree.style.transition = 'opacity .5s'; tree.style.opacity = '1'; }, 300);
+}
+
+// Charts
+if (!window.__cf) {
+  // Energy trend
+  new Chart(document.getElementById('energyChart'), {
+    type: 'line',
+    data: {
+      labels: ['周一','周二','周三','周四','周五','周六','周日'],
+      datasets: [
+        { label:'专注力', data:[72,88,65,78,82,60,70], borderColor:'#818cf8', backgroundColor:'#818cf820', fill:true, tension:.4, pointRadius:4, borderWidth:2 },
+        { label:'精力值', data:[80,75,60,72,68,85,72], borderColor:'#34d399', backgroundColor:'#34d39920', fill:true, tension:.4, pointRadius:4, borderWidth:2 }
+      ]
+    },
+    options: { responsive:true, plugins:{ legend:{ position:'bottom', labels:{color:'#9ca3af'} }}, scales:{ y:{beginAtZero:false, min:40, max:100, ticks:{color:'#6b7280'}, grid:{color:'#1f2937'}}, x:{ticks:{color:'#6b7280'}, grid:{display:false}} }}
+  });
+  // Time distribution
+  new Chart(document.getElementById('timeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['深度工作','学习','运动','社交','休息','娱乐'],
+      datasets: [{ data:[4.5,2,1,0.5,1.5,2.5], backgroundColor:['#6366f1','#8b5cf6','#10b981','#f59e0b','#06b6d4','#f43f5e'], borderWidth:0 }]
+    },
+    options: { responsive:true, cutout:'60%', plugins:{ legend:{ position:'bottom', labels:{color:'#9ca3af', padding:12} }}}
+  });
+}
+
+// Fade-in observer
+const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('fade-up'); }), {threshold:.1});
+document.querySelectorAll('section').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
